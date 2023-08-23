@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/ChartJs-Pie-Line-Vue3-TS/',
+  base: '/ChartJs-Vue3-TS/',
   plugins: [
     vue(),
   ],
