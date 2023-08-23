@@ -1,34 +1,11 @@
 <script setup lang="ts">
+import BtnBack from '@/components/BtnBack.vue';
 import LineChart from '@/components/LineChart.vue';
 </script>
 
 <template>
-    <button 
-        class="btn_back"
-        @click="$router.push('/')"
-    >
-        Go back
-    </button>
+    <btn-back />
     <line-chart 
         style="width: 80%; height: 40%;"
     />
 </template>
-
-<style lang="scss">
-.btn_back {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    outline: none;
-    border: none;
-    border-radius: 7px;
-    padding: 8px 18px;
-    background: none;
-    color: #fff;
-    font-size: medium;
-    font-family: 'Courier New', Courier, monospace;
-}
-.btn_back:hover {
-  background-color: #70a0af;
-}
-</style>

@@ -1,26 +1,24 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { useDiagramStore } from '@/stores/diagramStore';
-
-  const router = useRouter();
+import BtnGo from '@/components/BtnGo.vue';
   const diagranStore = useDiagramStore();
 
   const isErrorLoading = ref(false);
-
+  const isLoading = ref(false)
   onMounted(async ()=> {
-    const isSuccesLoadingPieData = await diagranStore.getPieChartData();
-    if (!isSuccesLoadingPieData) {
-        isErrorLoading.value = true; 
-        return;
-    }
-    
-    const isSuccesLoadingLineData = await diagranStore.getLineChartData();
-    if (!isSuccesLoadingLineData) {
-        isErrorLoading.value = true; 
-        return;
-    }
+    isLoading.value = true;
+    const isSuccessfulLoadingData = await Promise.all([
+      diagranStore.getPieChartData(),
+      diagranStore.getLineChartData()
+    ]) 
 
+    if (!isSuccessfulLoadingData) {
+      isLoading.value = false;
+      isErrorLoading.value = true; 
+      return;
+    }
+    isLoading.value = false;
     setTimeout(() => {
         isErrorLoading.value = false;
     }, 800);
@@ -29,19 +27,21 @@ import { useDiagramStore } from '@/stores/diagramStore';
 
 <template>
   <nav class="nav">
-    <button 
-      class="nav_btn"
-      @click="router.push('/diagram/pie')"
-    >
-      Go to Pie Diagram
-    </button>
-    <button 
-      class="nav_btn"
-      @click="router.push('/diagram/line')"
-    >
-      Go to Line Diagram
-    </button>
+    <btn-go 
+      text="Pie Diagram"
+      route="pie"
+    />
+    <btn-go 
+      text="Line Diagram"
+      route="line"
+    />
   </nav>
+  <p 
+    v-if="isLoading"
+    class="loading"
+  >
+      loading...
+  </p>
   <div 
     v-if="isErrorLoading"
     class="error_msg"
@@ -60,18 +60,11 @@ import { useDiagramStore } from '@/stores/diagramStore';
   padding: 10px 20px;
   border-radius: 7px;
 }
-.nav_btn {
-  outline: none;
-  border: none;
-  border-radius: 7px;
-  width: 40%;
-  background: none;
+.loading {
+  position: absolute;
+  top: 55%;
   color: #fff;
-  font-size: medium;
   font-family: 'Courier New', Courier, monospace;
-}
-.nav_btn:hover {
-  background-color: #70a0af;
 }
 .error_msg {
   position: absolute;
