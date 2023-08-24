@@ -8,20 +8,22 @@ import BtnGo from '@/components/BtnGo.vue';
   const isLoading = ref(false)
   onMounted(async ()=> {
     isLoading.value = true;
-    const isSuccessfulLoadingData = await Promise.all([
+    const [isPieLoaded, isLineLoaded] = await Promise.all([
       diagranStore.getPieChartData(),
       diagranStore.getLineChartData()
     ]) 
 
-    if (!isSuccessfulLoadingData) {
+    if (!isLineLoaded || !isPieLoaded) {
       isLoading.value = false;
       isErrorLoading.value = true; 
+      setTimeout(() => {
+        isErrorLoading.value = false;
+    }, 1500);
       return;
     }
+
     isLoading.value = false;
-    setTimeout(() => {
-        isErrorLoading.value = false;
-    }, 800);
+    isErrorLoading.value = false;
 })
 </script>
 
